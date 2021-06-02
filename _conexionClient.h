@@ -4,6 +4,7 @@ typedef struct{
   	struct sockaddr_in server;
   	struct hostent *hp;
   	int resp;
+  	char ** ip;
 }ConexionClient;
 
 ConexionClient conectionC();

@@ -1,23 +1,33 @@
+//Creo estructura para guardar ip, puerto y estado en los arrays del main.
 typedef struct{
-	SOCKET comm_socket;
-	int estate;
-}_Socket;
+	char ** ip;
+	int * port;
+	char ** state;
+} Server;
 
+//Creo estructura servidor para introducir los parametros de un socket
 typedef struct{
   	WSADATA wsaData;
-  	_Socket SocketState[10];
+  	SOCKET comm_socket[10];
   	SOCKET conn_socket;
   	struct sockaddr_in server;
   	struct sockaddr_in client;
   	struct hostent *hp;
   	int response,stsize;
-  	char ip[12];
+  	Server ip;
   	int port;
-  	int esCliente;
+  	int valCliente;
+	int contSock;
 }ConexionServer;
 
+
 int initDll ();
-ConexionServer conection();
-void waiting(ConexionServer * con1, int contSock);
+ConexionServer conection(int port);
+void waiting(ConexionServer * con1);
+void waitingServer(ConexionServer * con1);
+void waitingClient(ConexionServer * con1);
+void guardarServidor(ConexionServer * con1);
+
+//char guardarServidor(ConexionServer * con);
 
 

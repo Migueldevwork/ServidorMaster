@@ -7,40 +7,47 @@
 #include "_conexionClient.h"
 #include "_conexionServer.h"
 #include "_funcionesMensaje.h"
-
+#define MAX_SERV 10
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char *argv[]) {
-	ConexionServer conS1 = conection();
-	char sendBuff[1024];
-	char ip[10][20];
+	int portServidor = 4000;            //Variable que define el puerto por donde entran los servidores.
+	int portCliente = 3000;             //Variable que define el puerto por donde entran los clientes.
+	char ip[MAX_SERV][20];              //Array para guardar las ip de los servidores auxiliares.
+	int port[MAX_SERV];                 //Array para guardar los puertos de los servidores auxiliares.
+	char state [MAX_SERV][20];          //Array para guardar los estados de los servidores auxiliares.
 	
-  	int contSock = 0; //Indice de cada socket asignado en un hilo          
-  	while(1){
+	
+	ConexionServer conS = conection(portServidor); //Configuro el soquet para Servidores
+	conS.contSock = 0;
+	  //waiting(&conS);
+	ConexionServer conC = conection(portCliente); //Configuro el soquet para Clientes
+	
+	//Asocio los punteros de las estructuras con los arrays para guardar ip, puerto y estado de los servidores.
+	conC.ip.ip = (char**)&ip;
+	conS.ip.ip = (char**)&ip;
+	conC.ip.port = (int*)&port;
+	conS.ip.port = (int*)&port;
+	conC.ip.state = (char**)&state;
+	conS.ip.state = (char**)&state;
+	
 
-	waiting(&conS1,  contSock);
-	
-	if(conS1.esCliente){
-		printf("Conexión entrante desde: %s\n", inet_ntoa(conS1.client.sin_addr), ". Conectado como Servidor.");
-		printf("Introduce 'OK' para aceptar servidor y guardar IP.");
-		sendBuff [1024]= sending(&conS1);
-		if(sendBuff[1024] = "OK"){
-			ip[1][20] = guardarServidor();
-			printf("Servidor con IP ' %s\n", inet_ntoa(conS1.client.sin_addr), "' Guardado.");
-		}
-	}else{
-		printf("Conexión entrante desde: %s\n", inet_ntoa(conS1.client.sin_addr), ". Conectado como Cliente.");
-	}
-	  pthread_t thread1; 
-	  pthread_create(&thread1, NULL, (void *)sending, (void *)&conS1.SocketState[contSock]);
+	    
+  		pthread_t thread1; 														//Abro un hilo 1
+	  	pthread_create(&thread1, NULL, (void *)waitingServer, (void *)&conS); 	//Le paso la funcion de escucha de servidores al hilo 1.
+	  	pthread_t thread2;														//Abro un hilo 2
+	 	pthread_create(&thread2, NULL, (void *)waitingClient, (void *)&conC);	//Le paso la funcion de escucha de clientes al hilo 2 S.
+		/*pthread_t thread3;
+	 	pthread_create(&thread3, NULL, (void *)getComando, (void *)&conS);
+  		
+	  /*pthread_t thread1; 
+	  pthread_create(&thread1, NULL, (void *)sending, (void *)&conS1.SocketState[contSock]);*/
 	  
 	  
-	  contSock++;
-  }
 
 	getchar();            
 
-  closesocket(conS1.SocketState[contSock].comm_socket);                  //CIERRA - Socket primera escucha                  //<--- Cambiado de posición
+  //closesocket(conS1.SocketState[contSock].comm_socket);                  //CIERRA - Socket primera escucha                  //<--- Cambiado de posición
   
   // Cerramos liberia winsock
   WSACleanup();
