@@ -26,7 +26,7 @@ ConexionServer conection(int port){
  	/*printf("Inserta la ip:");
   	scanf("%s", conect.ip);
   	fflush(stdin);*/
-  	conect.hp=(struct hostent *)gethostbyname("192.168.1.51");
+  	conect.hp=(struct hostent *)gethostbyname("192.168.1.96");
   	if(!conect.hp){
     	printf("No se ha encontrado servidor...\n");
     	getchar();WSACleanup();
@@ -45,7 +45,7 @@ ConexionServer conection(int port){
   	/*printf("Inserta el puerto:");
   	scanf("%d", &conect.port);
   	fflush(stdin);*/
-  	conect.server.sin_addr.s_addr=inet_addr("192.168.1.51");
+  	conect.server.sin_addr.s_addr=inet_addr("192.168.1.96");
   
   	conect.response=bind(conect.conn_socket, (struct sockaddr *)&conect.server, sizeof(conect.server));//2- BIND
   	if(conect.response==SOCKET_ERROR){
@@ -80,13 +80,16 @@ void guardarServidor(ConexionServer * con1){
 	
 	printf("Conectado como Servidor....Conexión entrante desde: %s\n", inet_ntoa(con1->client.sin_addr));
 		char ip[10][15];
+		int port;
 		char sendBuff[] = "OK";
 			printf("Enviando Mensaje... \n");
 			send(con1->comm_socket[con1->contSock], sendBuff,sizeof(sendBuff),0);
-			strcpy(&con1->ip.ip[con1->contSock][0],inet_ntoa(con1->client.sin_addr));
+			strcpy(ip[con1->contSock][0],inet_ntoa(con1->client.sin_addr));
+			port = 5000;
+			insertar(ip, port, con1)
 			/*con1->ip.port[con1->contSock] = 3500;
 			strcpy(&con1->ip.state[con1->contSock][0],"Libre");/*/
-			printf("Servidor guardado con IP ' %s\n", &con1->ip.ip[con1->contSock][0]);
+			//printf("Servidor guardado con IP ' %s\n", &con1->ip.ip[con1->contSock][0]);
 }
 
 //Funcion que coje el socket de servidor lo pone en escucha y guarda su ip, puerto y estado en un array (estructura Server).
@@ -111,6 +114,24 @@ void waitingClient(ConexionServer * con1){
 			printf("Servidor guardado con IP ' %s\n", &con1->ip.ip[con1->contSock][0]);
 			con1->contSock++;
 }
+}
+
+void insertarLista(char * ip, int port, ConexionServer * con1)
+{
+    con1->ls = malloc(sizeof(struct Lista));
+    con1->ls.ip = ip;
+    con1->ls.port = port;
+    con1->ls.state = 1;
+    if (con1->ps.pInit == NULL)
+    {
+        con1->ps.pInit = con1->ls;
+        con1->ps.pLast = con1->ls;
+    }
+    else
+    {
+       con1->ls.lA
+        con1->ps.pLast = con1->ls;
+    }
 }
 
 

@@ -1,9 +1,4 @@
 //Creo estructura para guardar ip, puerto y estado en los arrays del main.
-typedef struct{
-	char ** ip;
-	int * port;
-	char ** state;
-} Server;
 
 //Creo estructura servidor para introducir los parametros de un socket
 typedef struct{
@@ -14,12 +9,23 @@ typedef struct{
   	struct sockaddr_in client;
   	struct hostent *hp;
   	int response,stsize;
-  	Server ip;
-  	int port;
-  	int valCliente;
 	int contSock;
+	Position ps;
+	Lista ls;
 }ConexionServer;
 
+typedef struct {
+	char ip[12];
+	unsigned short port;
+	unsigned short state;
+	Lista * lA;
+	Lista * lD;		
+}Lista;
+
+typedef struct {
+	Lista * pInit;
+	Lista * pLast;
+}Position;
 
 int initDll ();
 ConexionServer conection(int port);

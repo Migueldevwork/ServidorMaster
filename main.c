@@ -24,19 +24,22 @@ int main(int argc, char *argv[]) {
 	ConexionServer conC = conection(portCliente); //Configuro el soquet para Clientes
 	
 	//Asocio los punteros de las estructuras con los arrays para guardar ip, puerto y estado de los servidores.
-	conC.ip.ip = (char**)&ip;
+	/*conC.ip.ip = (char**)&ip;
 	conS.ip.ip = (char**)&ip;
 	conC.ip.port = (int*)&port;
 	conS.ip.port = (int*)&port;
 	conC.ip.state = (char**)&state;
-	conS.ip.state = (char**)&state;
+	conS.ip.state = (char**)&state;*/
 	
 
-	    
-  		pthread_t thread1; 														//Abro un hilo 1
+
+	    		pthread_t thread1; 														//Abro un hilo 1
 	  	pthread_create(&thread1, NULL, (void *)waitingServer, (void *)&conS); 	//Le paso la funcion de escucha de servidores al hilo 1.
 	  	pthread_t thread2;														//Abro un hilo 2
-	 	pthread_create(&thread2, NULL, (void *)waitingClient, (void *)&conC);	//Le paso la funcion de escucha de clientes al hilo 2 S.
+	 	pthread_create(&thread2, NULL, (void *)waitingClient, (void *)&conC);
+		  		
+		
+			//Le paso la funcion de escucha de clientes al hilo 2 S.
 		/*pthread_t thread3;
 	 	pthread_create(&thread3, NULL, (void *)getComando, (void *)&conS);
   		
